@@ -1,0 +1,50 @@
+<html>
+	<head>
+		<title>Add Patient data</title>
+	</head>
+
+	<body bgcolor="black">
+		
+		<center>
+			<section class="section">
+				<div class="container">
+					<div class="row justify-content-center">
+						<div class="col-md-10">
+							<div class="card">
+								<div class="card-header">
+									<h1 class="fw-bold">Patient data retrival from Database</h1>
+								</div>
+								<div class="card-body">
+									<table class="table table-bordered table-striped">
+										<thead>
+											<tr>
+												<th>Patient ID</th>
+												<th>Patient Name</th>
+												<th>Diagnosis</th>												
+												<th>Consulted Doctor</th>
+												<th>Scan Image</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for p in patients %}
+												<tr>
+													<td>{{ p.PatientId }} </td>
+													<td>{{ p.PatientName }} </td> 	
+													<td>{{ p.Diagnosis }} </td>
+													<td>{{ p.Con_Doc }} </td> 	 	
+														<td>
+															<img src="{{ p.PatientImg }}" alt="" width="400" height="400" class="prod-size">
+														</td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</center>
+	</body>
+</html>
