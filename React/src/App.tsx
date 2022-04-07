@@ -9,7 +9,7 @@ import Register from "./pages/Register";
 function App() {
     const [name, setName] = useState('');
 
-    const [pname, setpname] = useState('');
+   
 
 
     useEffect(() => {
@@ -20,14 +20,9 @@ function App() {
                     credentials: 'include',
                 });
 
-                const response2 = await fetch('http://localhost:8000/log/patient' , {
-                    headers: {'Content-Type': 'application/json'},
-                    credentials: 'include',
-                });
-
+              
                 const content = await response.json();
 
-                const content2 = await response2.json();
 
                 if(content.name===undefined)
                 {
@@ -36,7 +31,7 @@ function App() {
                 }
                 else
                     setName(content.name);
-                    setpname(content2.PatientName);
+         
                     
                 console.log()
                 
@@ -63,4 +58,3 @@ function App() {
 }
 
 export default App;
-

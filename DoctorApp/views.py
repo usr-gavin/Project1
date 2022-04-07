@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from msrest import Serializer
 
 #jws restframework
 from rest_framework.views import APIView
@@ -140,9 +141,8 @@ class LogoutView(APIView):
 class PatientView(APIView):
     @csrf_exempt
     def get(self, request):
-        
-        user = Patients.objects.all().first()
-        serializer = PatientSerializer(user)
+        patients = Patients.objects.all()#.first()
+        serializer=PatientSerializer(patients,many=True)
         return Response(serializer.data)
 
     @csrf_exempt
