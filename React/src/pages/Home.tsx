@@ -2,29 +2,39 @@ import React,{useEffect, useState} from 'react';
 
 const Home = (props: { name: string }) => {
 
-    const[pname,setPname]=useState('');
+    const dat=[];
+    
 
     useEffect(() => {
         (
             async () => {
-                const response2 = await fetch('http://localhost:8000/log/patient' , {
+                const response = await fetch('http://localhost:8000/log/patient' , {
                     headers: {'Content-Type': 'application/json'},
                     credentials: 'include',
                 });
-                const contentp=await response2.json();
-                
-                setPname(contentp.PatientName)
+
+              
+                const pat = await response.json();
+
+                  dat=pat;
+
+                  
+                  
+                  console.log(dat)
+
+                  
             }
         )();
     });
+
+    
     
     return (
         <div>
             {props.name ? 'Hi ' + props.name : 'You are not logged in'}<br></br>
-            PatientName:{pname}
             
+        
 
-            
         </div>
     );
 };

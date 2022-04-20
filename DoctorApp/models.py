@@ -14,6 +14,9 @@ class Doctors(AbstractUser):
     name = models.CharField(max_length=500)
     email = models.CharField(max_length=500,unique=True)
     password=models.CharField(max_length=500)
+    phone = models.CharField(max_length=500)
+    address = models.CharField(max_length=500)
+    specification = models.CharField(max_length=500)
     username=None
 
     USERNAME_FIELD = 'email'

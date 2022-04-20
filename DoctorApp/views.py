@@ -141,9 +141,18 @@ class LogoutView(APIView):
 class PatientView(APIView):
     @csrf_exempt
     def get(self, request):
-        patients = Patients.objects.all()#.first()
-        serializer=PatientSerializer(patients,many=True)
-        return Response(serializer.data)
+        token = request.COOKIES.get('jwt')
+        if token:
+        
+            payload = jwt.decode(token, 'secret', algorithm=['HS256'])
+
+            user = Doctors.objects.filter(id=payload['id']).first()
+            
+            
+            patients = Patients.objects.filter(Con_Doc=user.name)
+            serializer=PatientSerializer(patients,many=True)
+
+            return Response(serializer.data)
 
     @csrf_exempt
     def post(self, request):
