@@ -2,7 +2,7 @@ import React,{useEffect, useState} from 'react';
 
 const Home = (props: { name: string }) => {
 
-    const dat=[];
+    var dat=[];
     
 
     useEffect(() => {

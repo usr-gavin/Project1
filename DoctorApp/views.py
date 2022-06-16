@@ -3,6 +3,9 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from msrest import Serializer
+from DoctorApp.Views.userview import RegisterView,LoginView,UserView,LogoutView
+from DoctorApp.Views.patientview import PatientView,PatientEditView
+from DoctorApp.Views.adminview import AdminView,AdminresView
 
 #jws restframework
 from rest_framework.views import APIView
@@ -67,96 +70,11 @@ import jwt, datetime
 
 # Create your views here. 
 
-class RegisterView(APIView):
-    @csrf_exempt
-    def post(self, request):
-        serializer = DoctorSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save() #saving User profile
-        return Response(serializer.data)
-
-
-class LoginView(APIView):
-    @csrf_exempt
-    def post(self, request):
-        email = request.data['email']
-        password = request.data['password']
-
-        user = Doctors.objects.filter(email=email).first()
-            
-        if user is None:
-            raise AuthenticationFailed('User not found!')
-
-        if not user.check_password(password):
-            raise AuthenticationFailed('Incorrect password!')
-
-        payload = {
-            'id': user.id,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-            'iat': datetime.datetime.utcnow()
-        }
-
-        token = jwt.encode(payload, 'secret', algorithm='HS256').decode('utf-8')
-
-        response = Response()
-
-        response.set_cookie(key='jwt', value=token, httponly=True)
-        response.data = {
-            'jwt': token
-        }
-        return response
-
-
-class UserView(APIView):
-    @csrf_exempt
-    def get(self, request):
-        token = request.COOKIES.get('jwt')
-
-        if not token:
-            raise AuthenticationFailed('Unauthenticated!')
-
-        try:
-            payload = jwt.decode(token, 'secret', algorithm=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Unauthenticated!')
-
-        user = Doctors.objects.filter(id=payload['id']).first()
-        serializer = DoctorSerializer(user)
-        return Response(serializer.data)
-
-
-class LogoutView(APIView):
-    @csrf_exempt
-    def post(self, request):
-        response = Response()
-        response.delete_cookie('jwt')
-        response.data = {
-            'message': 'success'
-        }
-        return response
 
 
 #for_patient
 
-class PatientView(APIView):
-    @csrf_exempt
-    def get(self, request):
-        token = request.COOKIES.get('jwt')
-        if token:
-        
-            payload = jwt.decode(token, 'secret', algorithm=['HS256'])
 
-            user = Doctors.objects.filter(id=payload['id']).first()
-            
-            
-            patients = Patients.objects.filter(Con_Doc=user.name)
-            serializer=PatientSerializer(patients,many=True)
 
-            return Response(serializer.data)
+#Adminview
 
-    @csrf_exempt
-    def post(self, request):
-        serializer = PatientSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save() #saving User profile
-        return Response(serializer.data)
